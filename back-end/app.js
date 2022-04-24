@@ -1,12 +1,9 @@
+ require("dotenv").config();
 const express = require('express');
 const fs = require('fs').promises;
 const app = express();
-const bodyParser = require("bodyParser");
-
-app.use
-
-
-
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.json());
 
 
@@ -36,7 +33,7 @@ app.use('/test', (req, res, next) => {
   next();
 })
 
-app.get('/index/',(req,res,next)=> { 
+app.get('/',(req,res,next)=> { 
   fs.readFile(__dirname + "/index.html")
    .then(contents => {
      res.setHeader("Content-Type", "text/html");
@@ -50,14 +47,73 @@ app.get('/index/',(req,res,next)=> {
    });
 });
 
+users = [];
 
-app.post('/test' ,(req,res,next) =>{
-  console.log(req.body);
+app.get('testi', (req,res,next) => {
+  res.json(users);
+})
+app.post('/testi' ,(req,res,next) =>{
+  usrs = { name: req.body.user_name}
+  users.push(usrs);
+  res.status(200).json(users);
 })
 
 
 
-
+app.listen(4000);
 
 
 module.exports = app
+
+
+
+
+
+public Node getBestPath()
+{
+    int cout = 1;
+    Node startNode = new Node(manhattanDistance(this.posActiveRobot, this.posActiveGoal) + cout, cout, this.initialState, null, null);
+    PriorityQueue<Node> openList = new PriorityQueue<Node>(new NodeComparator());
+    openList.add(startNode);
+    HashSet<Node> closeList = new HashSet<>();
+
+    while (!(openList.isEmpty()))
+    {
+        Node n = openList.poll();
+
+        cout ++;
+
+
+        if (n.getState().Get_Robot()[n.getState().getActiveGoal()][0] == this.posActiveGoal[0] && n.getState().Get_Robot()[n.getState().getActiveGoal()][1] == this.posActiveGoal[1])
+        {
+            return n;
+        }
+
+        for (int i = 0; i <= 3; i++)
+        {
+            for (Move move : n.getState().getMove(i))
+            {
+                State s;
+
+                try {
+                    // Récupère le state du noeud précédent et joue le mouvement actuel.
+                    s = n.getState().getClone();
+                    s.play(move, i);
+                }
+                catch (Exception e) {return null;}
+
+                int[] newPosRobot = s.Get_Robot()[s.getActiveGoal()];
+
+                Node node = new Node(manhattanDistance(newPosRobot, this.posActiveGoal) + cout, cout, s, n, move);
+
+
+                if (isInterestingNode(openList, closeList, node))
+                {
+
+                    openList.add(node);
+                }
+            }
+        }
+    }
+    return null;
+}
