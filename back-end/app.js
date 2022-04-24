@@ -96,7 +96,6 @@ public Node getBestPath()
                 State s;
 
                 try {
-                    // Récupère le state du noeud précédent et joue le mouvement actuel.
                     s = n.getState().getClone();
                     s.play(move, i);
                 }
